@@ -2,6 +2,7 @@
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue'
 import { useForm, Head } from '@inertiajs/vue3'
 import { ref } from 'vue'
+import Swal from 'sweetalert2'
 
 const props = defineProps({ bodegas: Array })
 
@@ -38,10 +39,71 @@ function guardarEdicion(b) {
     })
 }
 
-function eliminar(b) {
-    if (confirm(`¿Eliminar bodega ${b.numero}?`))
-        useForm({}).delete(route('bodegas.destroy', b.id))
+async function eliminar(bodega) {
+    if (bodega.estado === 'ocupada') {
+        const result = await Swal.fire({
+            title: '⚠️ Bodega Ocupada',
+            html: `
+                <p class="text-gray-600 mb-3">La bodega <strong>#${bodega.numero}</strong> tiene un cliente asignado.</p>
+                <div class="bg-red-50 border border-red-200 rounded-lg p-3 text-left text-sm text-red-700 space-y-1">
+                    <p>📋 Se eliminara del sistema:</p>
+                    <p>• Cliente asignado</p>
+                    <p>• Contrato activo</p>
+                    <p>• Historial de pagos</p>
+                </div>
+                
+            `,
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#ef4444',
+            cancelButtonColor: '#6b7280',
+            confirmButtonText: 'Sí, eliminar',
+            cancelButtonText: 'Cancelar',
+            reverseButtons: true,
+        })
+
+        if (result.isConfirmed) {
+            router.delete(route('bodegas.destroy', bodega.id), {
+                onSuccess: () => {
+                    Swal.fire({
+                        title: '¡Eliminada!',
+                        text: `La bodega #${bodega.numero} fue eliminada del sistema.`,
+                        icon: 'success',
+                        timer: 2000,
+                        showConfirmButton: false,
+                    })
+                }
+            })
+        }
+    } else {
+        const result = await Swal.fire({
+            title: '¿Eliminar bodega?',
+            text: `La bodega #${bodega.numero} será eliminada del sistema.`,
+            icon: 'question',
+            showCancelButton: true,
+            confirmButtonColor: '#ef4444',
+            cancelButtonColor: '#6b7280',
+            confirmButtonText: 'Sí, eliminar',
+            cancelButtonText: 'Cancelar',
+            reverseButtons: true,
+        })
+
+        if (result.isConfirmed) {
+            router.delete(route('bodegas.destroy', bodega.id), {
+                onSuccess: () => {
+                    Swal.fire({
+                        title: '¡Eliminada!',
+                        text: `La bodega #${bodega.numero} fue eliminada.`,
+                        icon: 'success',
+                        timer: 2000,
+                        showConfirmButton: false,
+                    })
+                }
+            })
+        }
+    }
 }
+
 </script>
 
 <template>
@@ -150,8 +212,10 @@ function eliminar(b) {
                             <td class="px-4 py-3 text-center">
                                 <div class="flex gap-3 justify-center">
                                     <button @click="iniciarEdicion(b)" class="text-blue-500 hover:underline text-xs">Editar</button>
-                                    <button v-if="b.estado === 'disponible'" @click="eliminar(b)"
-                                            class="text-red-400 hover:underline text-xs">Eliminar</button>
+                                    <button @click="eliminar(b)"
+    class="text-red-600 hover:underline text-xs">
+    Eliminar
+</button>
                                 </div>
                             </td>
                         </template>

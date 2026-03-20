@@ -43,10 +43,9 @@ class BodegaController extends Controller
 
     public function destroy(Bodega $bodega)
     {
-        if ($bodega->estado === 'ocupada') {
-            return redirect()->back()->withErrors(['error' => 'No se puede eliminar una bodega ocupada.']);
-        }
-        $bodega->delete();
-        return redirect()->back()->with('success', 'Bodega eliminada.');
+        $bodega->delete(); // soft delete, queda en BD
+    
+        return redirect()->route('bodegas.index')
+            ->with('success', 'Bodega eliminada del sistema correctamente.');
     }
 }

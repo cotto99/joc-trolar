@@ -2,9 +2,12 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes; // ← agregar
 
 class Bodega extends Model
 {
+    use SoftDeletes; // ← agregar
+
     protected $fillable = [
         'numero', 'nombre', 'tamanio_m2',
         'descripcion', 'estado'

@@ -62,7 +62,7 @@ function fmt(val) {
             </div>
         </div>
 
-        <!-- Alertas -->
+        <!-- Alertas 
         <div v-if="alertas.length" class="bg-orange-50 border border-orange-200 rounded-xl p-4 mb-6">
             <h2 class="font-bold text-orange-800 mb-3">⚠️ Pagos próximos a vencer (5 días)</h2>
             <div class="space-y-2">
@@ -83,7 +83,7 @@ function fmt(val) {
                     </div>
                 </div>
             </div>
-        </div>
+        </div> -->
 
         <!-- Grid de Bodegas -->
         <div class="mb-4 flex items-center justify-between">
