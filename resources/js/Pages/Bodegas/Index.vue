@@ -1,6 +1,6 @@
 <script setup>
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue'
-import { useForm, Head } from '@inertiajs/vue3'
+import { useForm, Head, router } from '@inertiajs/vue3'
 import { ref } from 'vue'
 import Swal from 'sweetalert2'
 
